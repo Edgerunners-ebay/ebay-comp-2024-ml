@@ -1,0 +1,63 @@
+# Config for running the InferenceRecipe in generate.py to generate output from an LLM
+#
+# To launch, run the following command from root torchtune directory:
+#    tune run generate --config generation
+# Added my modifications to the original config located at https://github.com/pytorch/torchtune/blob/2c18c5bd92c6a29227e7a91ba1c56be4833eeb18/recipes/configs/generation.yaml
+
+# Model arguments
+model_dir: /home/017534556/ckpts/oct8-llama3.1-8B-instruct/
+model:
+    _component_: torchtune.models.llama3_1.qlora_llama3_1_8b
+    lora_attn_modules: ["q_proj", "v_proj", "k_proj", "output_proj"]
+    apply_lora_to_mlp: True
+    apply_lora_to_output: True
+    lora_rank: 8
+    lora_alpha: 16
+    lora_dropout: 0.0
+
+dataset:
+    _component_: torchtune.datasets.alpaca_cleaned_dataset
+    EBAY_ROOT: "/Users/saish/Documents/data/ebay-comp-2024"
+    OPTIMISED_FILES: "/Users/saish/Documents/data/ebay-comp-2024/optimised_files"
+    EBAY_ROOT_HPC: "/home/017534556/data/ebay"
+    OPTIMISED_FILES_HPC: "/home/017534556/data/ebay/optimised_files"
+    tokenizer_path: ${model_dir}/original/tokenizer.model
+    max_seq_len_custom: 16000
+    is_inference: True
+
+checkpointer:
+    _component_: torchtune.training.FullModelHFCheckpointer
+    checkpoint_dir: ${model_dir}
+    checkpoint_files: [
+            hf_model_0001_0.pt,
+            hf_model_0002_0.pt,
+            hf_model_0003_0.pt,
+            hf_model_0004_0.pt,
+            # adapter_0.pt,
+        ]
+    adapter_checkpoint: adapter_0.pt
+    output_dir: ${model_dir}
+    model_type: LLAMA3
+
+device: cuda
+dtype: bf16
+
+seed: 1234
+
+# Tokenizer arguments
+tokenizer:
+    _component_: torchtune.models.llama3.llama3_tokenizer
+    path: ${model_dir}/original/tokenizer.model
+    max_seq_len: null
+
+# Generation arguments; defaults taken from gpt-fast
+max_new_tokens: 300
+temperature: 0.6 # 0.8 and 0.6 are popular values to try
+top_k: 300
+
+enable_kv_cache: True
+
+quantizer: null
+
+db_root: /home/017534556/projects/ebay-comp-2024/db
+submission_table_name: oct8_llama3_1_8B_qlora_base_val

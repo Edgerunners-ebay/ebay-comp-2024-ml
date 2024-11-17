@@ -1,0 +1,16 @@
+EBAY_ROOT: "/Users/saish/Documents/data/ebay-comp-2024"
+OPTIMISED_FILES: "/Users/saish/Documents/data/ebay-comp-2024/optimised_files"
+EBAY_ROOT_HPC: "/home/017534556/data/ebay"
+PTIMISED_FILES_HPC: "/home/017534556/data/ebay/optimised_files"
+DB_ROOT: /home/017534556/projects/ebay-comp-2024/db
+
+# submission related
+query_range: [0, 5000]
+
+# model related
+ollama_model: gemma2:9b
+prediction_model: CompatibliltyFinderV1
+
+# options
+BASE_URL: "http://127.0.0.1:9090"
+submission_table_name: zeroshot_5k

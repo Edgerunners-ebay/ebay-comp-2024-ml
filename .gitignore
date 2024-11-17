@@ -1,0 +1,11 @@
+.env
+*.pyc
+notebooks/models/*
+ollama-linux-amd64
+batch_files/logs/*
+*.pkl
+*.csv
+db/*
+.vscode/*
+submissions/*
+wandb/*
